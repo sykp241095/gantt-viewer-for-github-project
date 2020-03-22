@@ -14,7 +14,7 @@
           :loading="repoNavIsLoading > 0"
           field="display"
           @typing="searchRepos"
-          :disabled="!sessionInfo"
+          :disabled="!userInfo"
           size="is-small"
           style="width: 300px; margin-left: 5px;"
           :value="
@@ -40,7 +40,7 @@
           </template>
         </b-autocomplete>
       </b-navbar-item>
-      <b-navbar-dropdown label="Local Panels">
+      <b-navbar-dropdown label="Panels">
         <b-navbar-item
           tag="router-link"
           :to="{ name: 'view_local_panel', params: { id: panel.id } }"
@@ -49,21 +49,20 @@
           >{{ panel.name }}</b-navbar-item
         >
         <b-navbar-item tag="router-link" :to="{ name: 'manage_local_panels' }"
-          >Manage Local Panels</b-navbar-item
+          >Manage Panels</b-navbar-item
         >
       </b-navbar-dropdown>
     </template>
     <template slot="end">
-      <b-navbar-dropdown v-if="sessionInfo && sessionInfo.githubUser">
+      <b-navbar-dropdown v-if="userInfo && userInfo.login">
         <template slot="label">
           <img
-            :src="sessionInfo.githubUser.avatarUrl"
+            :src="userInfo.avatarUrl"
             style="margin-right: 5px"
           />
-          {{ sessionInfo.githubUser.login }}
+          {{ userInfo.login }}
         </template>
-        <b-navbar-item href="javascript:;" @click="logout"
-          >Logout</b-navbar-item
+        <b-navbar-item @click="logout()">Reset Access Token</b-navbar-item
         >
       </b-navbar-dropdown>
     </template>
@@ -85,22 +84,14 @@ export default {
       repoNavDataTimestamp: 0,
     };
   },
-  props: ['repo', 'sessionInfo'],
+  props: ['repo', 'userInfo'],
   methods: {
     logout: async function() {
-      try {
-        await this.$http.post('/signout');
-        window.location.reload();
-      } catch (e) {
-        console.error(e);
-        this.$buefy.toast.open({
-          duration: 5000,
-          message: `Sign out failed`,
-          position: 'is-bottom',
-          type: 'is-danger',
-          queue: false,
-        });
-      }
+      chrome.storage.sync.set({
+        'accessToken': ''
+      })
+      window.accessToken = ''
+      window.location.reload(false)
     },
     handleRepoChange: function(option) {
       if (!option) {
@@ -115,7 +106,7 @@ export default {
       });
     },
     searchRepos: throttle(async function(name) {
-      if (!this.$props.sessionInfo) {
+      if (!this.$props.userInfo) {
         return;
       }
       if (!name.length) {

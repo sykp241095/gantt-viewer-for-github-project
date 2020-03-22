@@ -88,12 +88,13 @@
         :disabled="Object.keys(pendingTaskChanges).length === 0"
         >Preview & Save</b-button
       >
+      <a href="https://pingcap.com" target="_blank"><img src="../assets/pingcap.png" style="position:fixed;top:3px;right:10px;padding:0;margin:0;height:20px;filter:invert(100%);" /></a>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import { gantt } from 'dhtmlx-gantt';
 import 'dhtmlx-gantt/codebase/ext/dhtmlxgantt_tooltip.js';
 import 'dhtmlx-gantt/codebase/ext/dhtmlxgantt_marker.js';
@@ -127,7 +128,7 @@ export default {
       if (!panel) {
         return this.$props.localPanelId;
       }
-      return `Local Panel ${panel.name}`;
+      return `Panel ${panel.name}`;
     },
   },
   components: {
@@ -146,6 +147,9 @@ export default {
     };
   },
   async mounted() {
+    if (this.$props.localPanelId) {
+      this.viewPanel({ id: this.$props.localPanelId})
+    }
     gantt.ext.zoom.init({
       levels: [
         {
@@ -417,6 +421,7 @@ export default {
     this.lastTask = null;
   },
   methods: {
+    ...mapMutations('localPanel', ['viewPanel']),
     setLastTask(task) {
       this.lastTask = {
         start_date: task.start_date.valueOf(),
@@ -499,7 +504,7 @@ export default {
       if (!task._src.viewerCanUpdate) {
         return false;
       }
-      if (!window.sessionInfo) {
+      if (!window.userInfo) {
         return false;
       }
       // const currentLogin = window.sessionInfo.githubUser.login;

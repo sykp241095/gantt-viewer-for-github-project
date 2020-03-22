@@ -1,17 +1,21 @@
 <template>
   <div class="modal-card" style="width: auto">
     <section class="modal-card-body" style="padding: 30px">
-      <h1 class="title">Sign In</h1>
-      <p>To continue, you need to sign-in use your GitHub account.</p>
-      <div style="padding-top: 30px; text-align: center;">
+      <p>To continue, you need to submit your personal github access_token.</p>
+      <h3 style="margin: .3rem 0;">
+        <router-link to="/how-to-get-access-token">How to get access_token?</router-link>
+      </h3>
+      <b-field label="Access Token">
+        <b-input v-model="accessToken"></b-input>
+      </b-field>
+      <div style="text-align: center;">
         <b-button
           type="is-primary"
           @click="signin"
           :loading="isLoading"
-          icon-left="github-circle"
           rounded
         >
-          Sign in use GitHub Account
+          Get Start
         </b-button>
       </div>
     </section>
@@ -24,13 +28,17 @@ export default {
   data() {
     return {
       isLoading: false,
+      accessToken: ''
     };
   },
   methods: {
     signin() {
-      this.isLoading = true;
-      window.location =
-        '/github/signin?redirect=' + encodeURIComponent(window.location.href);
+      this.isLoading = true
+      console.log(this.accessToken)
+      chrome.storage.sync.set({
+        'accessToken': this.accessToken
+      })
+      window.location.reload(false)
     },
   },
 };

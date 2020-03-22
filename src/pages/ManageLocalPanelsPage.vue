@@ -1,11 +1,11 @@
 <template>
   <div style="height: 100%; display: grid; grid-template-rows: 180px auto;">
-    <vue-headful title="Manage Local Panels - GanttViewer" />
+    <vue-headful title="Manage Panels - GanttViewer" />
     <section class="hero is-primary">
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
-            Manage Local Panels
+            Manage Panels
           </h1>
           <b-button
             type="is-primary"
@@ -13,7 +13,7 @@
             rounded
             inverted
             @click="handleAddLocalPanel"
-            >Add Local Panel</b-button
+            >Add Panel</b-button
           >
           <!-- <b-button
             type="is-primary"
@@ -33,6 +33,7 @@
             @click="handleRefreshProjectNames"
             >Refresh Project Names</b-button
           > -->
+          <a href="https://pingcap.com" target="_blank"><img src="../assets/pingcap.png" style="position:fixed;top:3px;right:10px;padding:0;margin:0;height:20px;" /></a>
         </div>
       </div>
     </section>

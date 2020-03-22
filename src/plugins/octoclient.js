@@ -1,5 +1,7 @@
 import { Http } from 'vue-resource';
 
+const { graphql } = require('@octokit/graphql');
+
 const FLAG_PROJECT_ENABLE = 'EnableGantt'.toLowerCase();
 
 const QUERY_FRAG_PROJECT = `
@@ -39,11 +41,25 @@ class OctoClient {
   `;
 
   request = async (query, parameters) => {
-    const resp = await Http.post('/github/graphql', {
-      query,
-      parameters,
-    });
-    return resp.body;
+    const graphqlWithAuth = graphql.defaults({
+      headers: {
+        authorization: `Bearer ${window.accessToken}`,
+      },
+    })
+    const resp = await graphqlWithAuth(query, parameters)
+    // const resp = await Http.post(
+    //   'https://api.github.com/graphql',
+    //   {
+    //     query,
+    //     parameters,
+    //   },
+    //   {
+    //     headers: {
+    //       Authorization: 'Bearer 7f9dd579be37b5d76c8dd3a89bb2ae80ec35bb89'
+    //     }
+    //   }
+    // );
+    return resp;
   };
 
   loadEnabledProjectsFromRepo = async (org, repo) => {
@@ -187,6 +203,22 @@ class OctoClient {
     console.log('getOrgProject rateLimit', resp.rateLimit);
     return resp.organization.project;
   };
+
+  getGithubUserInfo = async () => {
+    const resp = await this.request(
+      `
+      query { 
+        viewer {
+            login
+            avatarUrl
+            id
+            name
+          }
+      }
+      `
+    )
+    return resp
+  }
 }
 
 export const octoClient = new OctoClient();

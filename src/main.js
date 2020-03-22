@@ -11,6 +11,7 @@ import IndexPage from '@/pages/IndexPage.vue';
 import ViewPage from '@/pages/ViewPage.vue';
 import ManageLocalPanelsPage from '@/pages/ManageLocalPanelsPage.vue';
 import ViewLocalPanelPage from '@/pages/ViewLocalPanelPage.vue';
+import HowToGetAccessTokenPage from '@/pages/HowToGetAccessTokenPage.vue';
 
 Vue.use(Buefy);
 Vue.use(VueRouter);
@@ -22,7 +23,6 @@ Vue.component('vue-headful', vueHeadful);
 Vue.config.productionTip = false;
 
 const router = new VueRouter({
-  mode: 'history',
   routes: [
     {
       name: 'index',
@@ -44,7 +44,17 @@ const router = new VueRouter({
       path: '/local_panel/:id',
       component: ViewLocalPanelPage,
     },
+    {
+      name: 'how-to-get-access-token',
+      path: '/how-to-get-access-token',
+      component: HowToGetAccessTokenPage,
+    },
   ],
 });
 
-new Vue({ router, store, render: h => h(App) }).$mount('#app');
+chrome.storage.sync.get('accessToken', (result) => {
+  window.accessToken = result.accessToken
+  new Vue({ router, store, render: h => h(App) }).$mount('#app');
+})
+// window.accessToken = ''
+// new Vue({ router, store, render: h => h(App) }).$mount('#app');
