@@ -28,6 +28,7 @@
     <div
       ref="gantt"
       style="position: absolute; left: 0; top: 27px; bottom: 0; width: 100%;"
+      @mouseover="handleGanttMouseOver"
     ></div>
     <div
       style="position: absolute; left: 0; width: 100%; top: 0; height: 27px;"
@@ -237,6 +238,14 @@ export default {
     gantt.templates.grid_file = item => {
       return '';
     };
+    gantt.templates.task_text = () => {
+      return '';
+    };
+    gantt.templates.rightside_text = (start, end, task) => {
+      return html`
+        ${task.text}
+      `;
+    };
     gantt.config.columns = [
       {
         name: 'text',
@@ -275,7 +284,6 @@ export default {
         name: 'repo',
         label: 'Repository',
         template: task => {
-          console.log(task._src);
           if (task._src.repository) {
             return html`
               <small>${task._src.repository.nameWithOwner}</small>
@@ -294,12 +302,14 @@ export default {
           break;
         case 'task':
           switch (task.schedule) {
+            case 'beyond-complete':
+              return 'kind-task-beyond-complete';
             case 'beyond-schedule':
-              return 'kind-task-beyond-schedule'
+              return 'kind-task-beyond-schedule';
             case 'on-schedule':
-              return 'kind-task-on-schedule'
+              return 'kind-task-on-schedule';
             case 'out-schedule':
-              return 'kind-task-out-schedule'
+              return 'kind-task-out-schedule';
           }
           return 'kind-task';
           break;
@@ -340,8 +350,8 @@ export default {
       return template;
     };
     gantt.config.drag_links = false;
-    gantt.config.task_height = 18;
-    gantt.config.row_height = 30;
+    gantt.config.task_height = 10;
+    gantt.config.row_height = 35;
     gantt.config.fit_tasks = true;
     // gantt.config.grid_width = this.columnWidth;
     gantt.config.details_on_dblclick = false;
@@ -472,6 +482,13 @@ export default {
       }
       this.setLastTask(task);
       return true;
+    },
+    handleGanttMouseOver(ev) {
+      const taskRowDom = ev.target.closest('.gantt_task_row, .gantt_row');
+      if (!taskRowDom || !taskRowDom.getAttribute('task_id')) {
+        return;
+      }
+      gantt.selectTask(taskRowDom.getAttribute('task_id'));
     },
     checkTaskChange(newTask, fieldName, newValueMapper) {
       console.log('Checking change for %s of field %s', newTask.id, fieldName);
@@ -823,14 +840,19 @@ export default {
 
       const data = [];
       projects.forEach(proj => {
-        const projectProgresses = items.filter(item => item.projectId == proj.id);
+        const projectProgresses = items.filter(
+          item => item.projectId == proj.id
+        );
         data.push({
           id: proj.id,
           text: proj.name,
           type: 'project',
           open: true,
           readonly: true,
-          progress: projectProgresses.reduce((a, b) => {return a + b._ganttProgress}, 0) / projectProgresses.length,
+          progress:
+            projectProgresses.reduce((a, b) => {
+              return a + b._ganttProgress;
+            }, 0) / projectProgresses.length,
           _src: proj,
         });
       });
@@ -839,7 +861,7 @@ export default {
           id: item.id,
           text: `#${item.number} ${item.title}`,
           type: 'task',
-          schedule: function () {
+          schedule: (function() {
             if (item._ganttProgress === 1) {
               return 'beyond-complete';
             }
@@ -857,7 +879,7 @@ export default {
               return 'beyond-schedule';
             }
             return 'on-schedule';
-          }(),
+          })(),
           start_date: item._ganttStart,
           end_date: item._ganttDue,
           progress: item._ganttProgress,
@@ -1040,51 +1062,66 @@ export default {
   }
 }
 
+.gantt_side_content.gantt_right {
+  overflow: visible;
+}
+
 .gantt_task_line {
   border: 1px solid transparent;
   border-radius: 0;
 
   &.gantt_selected {
     box-shadow: none;
+    border: 1px solid transparent;
   }
 
   &.kind-project {
-    background-color: #888;
+    background-color: rgba(#444, 0.3);
     .gantt_task_progress {
       background-color: #444;
     }
-    &.gantt_selected {
-      border: 1px solid #444;
+    // &.gantt_selected {
+    //   border: 1px solid #444;
+    // }
+  }
+
+  &.kind-task-beyond-complete {
+    background-color: rgba($blue, 0.3);
+    // &.gantt_selected {
+    //   border: 1px solid $blue;
+    // }
+    .gantt_task_progress {
+      background-color: $blue;
     }
   }
 
   &.kind-task-beyond-schedule {
-    background-color: rgba($green, 0.6);
-    &.gantt_selected {
-      border: 1px solid $green;
-    }
+    background-color: rgba($green, 0.3);
+    // &.gantt_selected {
+    //   border: 1px solid $green;
+    // }
     .gantt_task_progress {
       background-color: $green;
     }
   }
 
   &.kind-task-on-schedule {
-    background-color: rgba(247, 195, 0, 0.65);
-    &.gantt_selected {
-      border: 1px solid rgb(247, 200, 20);
-    }
+    background-color: rgba(247, 195, 0, 0.3);
+    // &.gantt_selected {
+    //   border: 1px solid $orange;
+    // }
     .gantt_task_progress {
       background-color: rgb(247, 180, 17);
     }
   }
 
   &.kind-task-out-schedule {
-    background-color: rgba($red, 0.45);
-    &.gantt_selected {
-      border: 1px solid $red;
-    }
+    background-color: rgba($red, 0.3);
+    // &.gantt_selected {
+    //   border: 1px solid $red;
+    // }
     .gantt_task_progress {
-      background-color: rgba($red, 0.6);
+      background-color: rgba($red, 0.8);
     }
   }
 }

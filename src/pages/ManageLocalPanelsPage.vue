@@ -15,7 +15,7 @@
             @click="handleAddLocalPanel"
             >Add Panel</b-button
           >
-          <!-- <b-button
+          <b-button
             type="is-primary"
             size="is-small"
             rounded
@@ -24,15 +24,6 @@
             @click="handleImportPanel"
             >Import Panel JSON</b-button
           >
-          <b-button
-            type="is-primary"
-            size="is-small"
-            rounded
-            inverted
-            outlined
-            @click="handleRefreshProjectNames"
-            >Refresh Project Names</b-button
-          > -->
           <a href="https://pingcap.com" target="_blank"><img src="../assets/pingcap.png" style="position:fixed;top:3px;right:10px;padding:0;margin:0;height:20px;" /></a>
         </div>
       </div>
@@ -43,7 +34,7 @@
           <div slot="trigger" slot-scope="props" class="card-header">
             <p class="card-header-title">Panel: {{ panel.name }}</p>
             <a class="card-header-icon">
-              <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"> </b-icon>
+              <b-icon :icon="props.open ? 'menu-down' : 'menu-up'"></b-icon>
             </a>
           </div>
           <div class="card-content">
@@ -66,9 +57,8 @@
                   disabled
                   v-if="!addProjectStates[panel.id]"
                   @click="handleAddProjectFromInput(panel.id)"
+                  >Add projects</b-button
                 >
-                  Add projects
-                </b-button>
                 <b-button
                   size="is-small"
                   type="is-primary"
@@ -82,7 +72,8 @@
                       addProjectStates[panel.id].loading
                   "
                 >
-                  Add projects from <b>organization</b>
+                  Add projects from
+                  <b>organization</b>
                   {{ addProjectStates[panel.id].org }}
                 </b-button>
                 <b-button
@@ -98,7 +89,8 @@
                       addProjectStates[panel.id].loading
                   "
                 >
-                  Add projects from <b>repository</b>
+                  Add projects from
+                  <b>repository</b>
                   {{ addProjectStates[panel.id].org }}/{{
                     addProjectStates[panel.id].repo
                   }}
@@ -116,9 +108,11 @@
                       addProjectStates[panel.id].loading
                   "
                 >
-                  Add <b>project id</b>
+                  Add
+                  <b>project id</b>
                   {{ addProjectStates[panel.id].project_num }} from
-                  <b>organization</b> {{ addProjectStates[panel.id].org }}
+                  <b>organization</b>
+                  {{ addProjectStates[panel.id].org }}
                 </b-button>
                 <b-button
                   size="is-small"
@@ -133,9 +127,11 @@
                       addProjectStates[panel.id].loading
                   "
                 >
-                  Add <b>project id</b>
+                  Add
+                  <b>project id</b>
                   {{ addProjectStates[panel.id].project_num }} from
-                  <b>repository</b> {{ addProjectStates[panel.id].org }}/{{
+                  <b>repository</b>
+                  {{ addProjectStates[panel.id].org }}/{{
                     addProjectStates[panel.id].repo
                   }}
                 </b-button>
@@ -144,13 +140,13 @@
             <div class="content" style="font-size: 14px">
               <b-table :data="Object.values(panel.projects)" narrowed>
                 <template slot-scope="props">
-                  <b-table-column label="Project Name" width="200">
-                    {{ props.row.name }}
-                  </b-table-column>
+                  <b-table-column label="Project Name" width="200">{{
+                    props.row.name
+                  }}</b-table-column>
                   <b-table-column label="URL">
-                    <a :href="props.row.url" target="_blank">{{
-                      props.row.url
-                    }}</a>
+                    <a :href="props.row.url" target="_blank">
+                      {{ props.row.url }}
+                    </a>
                   </b-table-column>
                   <b-table-column label="Action" width="100">
                     <b-button
@@ -161,7 +157,7 @@
                       >Delete</b-button
                     >
                     <!-- <b-button size="is-small" rounded outlined>↑</b-button>
-                    <b-button size="is-small" rounded outlined>↓</b-button> -->
+                    <b-button size="is-small" rounded outlined>↓</b-button>-->
                   </b-table-column>
                 </template>
               </b-table>
@@ -194,6 +190,12 @@ import Vue from 'vue';
 import { mapMutations, mapState } from 'vuex';
 import { v4 as uuidv4 } from 'uuid';
 import gh from 'parse-github-url';
+import Ajv from 'ajv';
+
+const ajv = new Ajv();
+ajv.addMetaSchema(require('ajv/lib/refs/json-schema-draft-06.json'));
+
+const validatePanelSchema = ajv.compile(require('./localPanelSchema.json'));
 
 export default {
   name: 'ManageLocalPanelsPage',
@@ -211,6 +213,7 @@ export default {
       'renamePanel',
       'addProjects',
       'deleteProject',
+      'importPanel',
     ]),
     handleQueryError(e) {
       console.error(e);
@@ -380,8 +383,37 @@ export default {
       }
       Vue.set(addInfo, 'loading', false);
     },
-    handleRefreshProjectNames() {},
-    handleImportPanel() {},
+    // handleRefreshProjectNames() {},
+    handleImportPanel() {
+      this.$buefy.dialog.prompt({
+        animation: 'zoom-in',
+        title: 'Import Panel JSON',
+        message: `Please input the panel JSON below`,
+        trapFocus: true,
+        inputAttrs: {
+          style: 'font-size: 12px',
+        },
+        onConfirm: json => {
+          // FIXME: Use JSON schema validate
+          try {
+            const d = JSON.parse(json);
+            if (!validatePanelSchema(d)) {
+              throw new Error('Invalid panel JSON schema');
+            }
+            this.importPanel({ panel: d });
+          } catch (e) {
+            console.log(e);
+            this.$buefy.toast.open({
+              duration: 5000,
+              message: 'Failed to import JSON: ' + e.message,
+              position: 'is-bottom',
+              type: 'is-danger',
+              queue: false,
+            });
+          }
+        },
+      });
+    },
     handleAddLocalPanel() {
       this.$buefy.dialog.prompt({
         animation: 'zoom-in',
