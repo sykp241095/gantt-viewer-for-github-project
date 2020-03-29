@@ -3,12 +3,11 @@ import Buefy from 'buefy';
 import VueRouter from 'vue-router';
 import VueResource from 'vue-resource';
 import VueClipboard from 'vue-clipboard2';
-import vueHeadful from 'vue-headful';
+import VueHeadful from 'vue-headful';
 import store from '@/store';
 import { OctoClientPlugin } from '@/plugins/octoclient';
 import App from '@/App.vue';
 import IndexPage from '@/pages/IndexPage.vue';
-import ViewPage from '@/pages/ViewPage.vue';
 import ManageLocalPanelsPage from '@/pages/ManageLocalPanelsPage.vue';
 import ViewLocalPanelPage from '@/pages/ViewLocalPanelPage.vue';
 import HowToGetAccessTokenPage from '@/pages/HowToGetAccessTokenPage.vue';
@@ -18,7 +17,7 @@ Vue.use(VueRouter);
 Vue.use(VueResource);
 Vue.use(OctoClientPlugin);
 Vue.use(VueClipboard);
-Vue.component('vue-headful', vueHeadful);
+Vue.component('vue-headful', VueHeadful);
 
 Vue.config.productionTip = false;
 
@@ -28,11 +27,6 @@ const router = new VueRouter({
       name: 'index',
       path: '/',
       component: IndexPage,
-    },
-    {
-      name: 'view',
-      path: '/view/:org/:repo',
-      component: ViewPage,
     },
     {
       name: 'manage_local_panels',
@@ -56,5 +50,3 @@ chrome.storage.sync.get('accessToken', (result) => {
   window.accessToken = result.accessToken
   new Vue({ router, store, render: h => h(App) }).$mount('#app');
 })
-// window.accessToken = ''
-// new Vue({ router, store, render: h => h(App) }).$mount('#app');

@@ -1,13 +1,8 @@
 const webpack = require('webpack');
-const serveApi = require('./api');
 
 module.exports = {
   lintOnSave: false,
   runtimeCompiler: true,
-  devServer: {
-    before: serveApi,
-    port: 5000,
-  },
   outputDir: 'chrome-ext/dist',
   publicPath: '/dist/',
   pluginOptions: {
@@ -28,7 +23,7 @@ module.exports = {
       // entry for the page
       entry: 'src/main.js',
       // the source template
-      template: 'public/index.html',
+      template: 'src/index.html',
       // output as dist/index.html
       filename: 'index.html',
       // when using title option,
@@ -46,7 +41,7 @@ module.exports = {
       // entry for the page
       entry: 'src/popup.js',
       // the source template
-      template: 'public/popup.html',
+      template: 'src/popup.html',
       // output as dist/index.html
       filename: 'popup.html',
       // when using title option,
