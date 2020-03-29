@@ -113,7 +113,7 @@ export default {
       'deleteProject',
     ]),
     resizeWindow () {
-      document.body.style.height = `${230 + 32 * (
+      document.body.style.height = `${187 + 44 * (
         this.historyList.length + Boolean(this.currentGithubRepo))}px`;
     },
     async createAndJumpToPanel (repo) {

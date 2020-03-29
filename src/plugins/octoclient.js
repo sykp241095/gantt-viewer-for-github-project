@@ -2,7 +2,8 @@ import { Http } from 'vue-resource';
 
 const { graphql } = require('@octokit/graphql');
 
-const FLAG_PROJECT_ENABLE = 'EnableGantt'.toLowerCase();
+// Enable gantt-viewer for all project.  2020/03-29 by wangdi
+// const FLAG_PROJECT_ENABLE = 'EnableGantt'.toLowerCase();
 
 const QUERY_FRAG_PROJECT = `
   body
@@ -96,9 +97,7 @@ class OctoClient {
       console.log('loadEnabledProjectsFromRepo rateLimit', resp.rateLimit);
       console.log(resp.repository.projects);
       resp.repository.projects.nodes.forEach(n => {
-        if (n.body.toLowerCase().indexOf(FLAG_PROJECT_ENABLE) > -1) {
-          r.push(n);
-        }
+        r.push(n)
       });
       if (!resp.repository.projects.pageInfo.hasNextPage) {
         break;
@@ -141,9 +140,7 @@ class OctoClient {
       console.log('loadEnabledProjectsFromOrg rateLimit', resp.rateLimit);
       console.log(resp.organization.projects.nodes);
       resp.organization.projects.nodes.forEach(n => {
-        if (n.body.toLowerCase().indexOf(FLAG_PROJECT_ENABLE) > -1) {
-          r.push(n);
-        }
+        r.push(n)
       });
       if (!resp.organization.projects.pageInfo.hasNextPage) {
         break;
