@@ -1,15 +1,11 @@
 {
-  "name": "my-gantt-viewer",
+  "name": "gantt-viewer-for-github-project",
   "version": "0.0.1",
   "engines": {
     "node": "12.x"
   },
-  "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "ui:serve": "vue-cli-service serve",
-    "ui:build": "vue-cli-service build",
-    "heroku-postbuild": "npm run ui:build"
+    "ui:build": "vue-cli-service build"
   },
   "dependencies": {
     "@octokit/graphql": "^4.3.1",
