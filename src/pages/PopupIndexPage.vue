@@ -26,32 +26,36 @@
           </li>
         </ul>
       </div>
-      <ul v-if="!searchKey">
-        <li v-if="currentGithubRepo">
-          <a class="menu-item" :style="{ backgroundImage: 'url(' + require('../assets/favorites.png') + ')' }" @click="createAndJumpToPanel(currentGithubRepo)">
-            <strong>Guess:</strong> {{ currentGithubRepo }}
-          </a>
-        </li>
-        <li v-for="history in historyList" :key="history.id">
-          <a class="menu-item" :style="{ backgroundImage: 'url(' + require('../assets/recently.png') + ')' }" @click="jump2Panel(history.id)">
-            {{ history.name }}
-          </a>
-          <div class="remove" @click="deletePanel({id: history.id})"></div>
-        </li>
-        <li>
-          <a class="menu-item split-border" :style="{ backgroundImage: 'url(' + require('../assets/panles.png') + ')' }" @click="jump2ManagePanels()">
-            <strong>Manage Panels</strong>
-          </a>
-        </li>
-        <li>
-          <a class="menu-item" :style="{ backgroundImage: 'url(' + require('../assets/security.png') + ')' }" @click="resetAccessToken()">
-            <strong>Reset Access Token</strong>
-          </a>
-        </li>
-        <li v-if="userInfo">
-          <a class="menu-item plain-item split-border" :style="{ backgroundImage: `url(${userInfo.avatarUrl})` }">{{ userInfo.login }}</a>
-        </li>
-      </ul>
+      <div v-if="!searchKey">
+        <ul class="panel-list">
+          <li v-if="currentGithubRepo">
+            <a class="menu-item" :style="{ backgroundImage: 'url(' + require('../assets/favorites.png') + ')' }" @click="createAndJumpToPanel(currentGithubRepo)">
+              <strong>Guess:</strong> {{ currentGithubRepo }}
+            </a>
+          </li>
+          <li v-for="history in historyList" :key="history.id">
+            <a class="menu-item" :style="{ backgroundImage: 'url(' + require('../assets/recently.png') + ')' }" @click="jump2Panel(history.id)">
+              {{ history.name }}
+            </a>
+            <div class="remove" @click="deletePanel({id: history.id})"></div>
+          </li>
+        </ul>
+        <ul>
+          <li>
+            <a class="menu-item split-border" :style="{ backgroundImage: 'url(' + require('../assets/panles.png') + ')' }" @click="jump2ManagePanels()">
+              <strong>Manage Panels</strong>
+            </a>
+          </li>
+          <li>
+            <a class="menu-item" :style="{ backgroundImage: 'url(' + require('../assets/security.png') + ')' }" @click="resetAccessToken()">
+              <strong>Reset Access Token</strong>
+            </a>
+          </li>
+          <li v-if="userInfo">
+            <a class="menu-item plain-item split-border" :style="{ backgroundImage: `url(${userInfo.avatarUrl})` }">{{ userInfo.login }}</a>
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -275,6 +279,10 @@ export default {
       padding: 0;
       margin: 0;
 
+      &.panel-list
+        max-height 220px
+        overflow-y scroll
+
       li
         display: list-item;
         text-align: -webkit-match-parent;
@@ -285,7 +293,8 @@ export default {
 
       .menu-item
         background-repeat: no-repeat;
-        padding-left: 60px;
+        padding-left: 57px;
+        padding-right: 25px;
         color: rgb(23, 33, 40);
         background-size: 21px;
         background-position: 20px 12px;

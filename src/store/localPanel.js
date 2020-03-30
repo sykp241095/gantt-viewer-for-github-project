@@ -59,7 +59,7 @@ export default {
         if (a.timestamp < b.timestamp) return 1;
         return 0
       })
-      return _tempPanel.slice(0, 5)
+      return _tempPanel
     }
   }
 };

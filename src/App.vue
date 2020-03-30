@@ -76,4 +76,8 @@ export default {
 
 <style lang="scss">
 @import './custom.scss';
+
+html {
+  height: 100%;
+}
 </style>
