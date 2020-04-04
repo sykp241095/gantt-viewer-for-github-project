@@ -32,7 +32,9 @@
             <a class="menu-item" :style="{ backgroundImage: 'url(' + require('../assets/favorites.png') + ')' }" @click="jump2Panel(history.id)">
               {{ history.name }}
             </a>
-            <div class="remove" @click="deletePanel({id: history.id})"></div>
+            <!--
+              <div class="remove" @click="deletePanel({id: history.id})"></div>
+            -->
           </li>
         </ul>
         <ul>
@@ -61,6 +63,42 @@
           <li v-if="userInfo">
             <a class="menu-item plain-item split-border" :style="{ backgroundImage: `url(${userInfo.avatarUrl})` }">{{ userInfo.login }}</a>
           </li>
+          <li>
+            <a class="menu-item plain-item split-border" style="text-align:right">
+              <table style="width:100%">
+                <tr>
+                  <td>
+                    <social-sharing url="https://wwww.pingcap.com"
+                                    title="Gantt Viewer for Github Project"
+                                    description="Gantt Viewer for Github Project, Powered by PingCAP/TiDB, MySQL at Scale"
+                                    quote="Gantt Viewer for Github Project"
+                                    hashtags="Github Project,PingCAP,TiDB,MySQL,Scale"
+                                    twitter-user="pingcap"
+                                    inline-template>
+                      <div id="social-sharing-wrapper">
+                        <network network="twitter">
+                          <font-awesome-icon :icon="{ prefix: 'fab', iconName: 'twitter' }"/>
+                        </network>
+                        &nbsp;&nbsp;&nbsp;
+                        <network network="facebook">
+                          <font-awesome-icon :icon="{ prefix: 'fab', iconName: 'facebook' }"/>
+                        </network>
+                        &nbsp;&nbsp;&nbsp;
+                        <network network="reddit">
+                          <font-awesome-icon :icon="{ prefix: 'fab', iconName: 'reddit' }"/>
+                        </network>
+                      </div>
+                    </social-sharing>
+                  </td>
+                  <td style="text-align:right">
+                    <a href="https://www.pingcap.com" target="_blank">
+                      <img :src="require('../assets/pingcap.png')" style="height:1em;filter:invert(100%);" />
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </a>
+          </li>
         </ul>
       </div>
     </div>
@@ -70,9 +108,23 @@
 <script>
 'use strict'
 
+import Vue from "vue"
+
 import { mapGetters, mapMutations } from 'vuex'
 import throttle from 'lodash/throttle'
 import { v4 as uuidv4 } from 'uuid'
+
+const SocialSharing = require("vue-social-sharing")
+Vue.use(SocialSharing)
+
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faReddit, faFacebook, faTwitter } from '@fortawesome/free-brands-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+library.add(faFacebook)
+library.add(faTwitter)
+library.add(faReddit)
+Vue.component('font-awesome-icon', FontAwesomeIcon)
+
 
 export default {
   data () {
@@ -141,7 +193,7 @@ export default {
       'deleteProject',
     ]),
     resizeWindow () {
-      document.body.style.height = `${187 + 44 * (
+      document.body.style.height = `${232 + 44 * (
         this.historyList.length + Boolean(this.currentGithubRepo) + Boolean(this.issueNumber))}px`;
     },
     async createAndJumpToPanel (repo) {
