@@ -28,16 +28,23 @@
       </div>
       <div v-if="!searchKey">
         <ul class="panel-list">
-          <li v-if="currentGithubRepo">
-            <a class="menu-item" :style="{ backgroundImage: 'url(' + require('../assets/favorites.png') + ')' }" @click="createAndJumpToPanel(currentGithubRepo)">
-              <strong>Guess:</strong> {{ currentGithubRepo }}
-            </a>
-          </li>
           <li v-for="history in historyList" :key="history.id">
             <a class="menu-item" :style="{ backgroundImage: 'url(' + require('../assets/recently.png') + ')' }" @click="jump2Panel(history.id)">
               {{ history.name }}
             </a>
             <div class="remove" @click="deletePanel({id: history.id})"></div>
+          </li>
+        </ul>
+        <ul>
+          <li v-if="currentGithubRepo">
+            <a class="menu-item split-border" :style="{ backgroundImage: 'url(' + require('../assets/favorites.png') + ')' }" @click="createAndJumpToPanel(currentGithubRepo)">
+              <strong>Guess:</strong> {{ currentGithubRepo }}
+            </a>
+          </li>
+          <li v-if="issueNumber">
+            <a class="menu-item" @click="$router.push('/set-time')">
+              <strong>Set time</strong>
+            </a>
           </li>
         </ul>
         <ul>
@@ -75,8 +82,12 @@ export default {
       searchResult: [],
       repoNavIsLoading: 0,
       repoNavDataTimestamp: 0,
-      currentGithubRepo: '',
-      userInfo: {}
+      userInfo: {},
+      currentGithubRepo: null,
+      repoName: null,
+      repoOwner: null,
+      issueNumber: null,
+      issueBody: null
     }
   },
   mounted () {
@@ -92,9 +103,22 @@ export default {
         msg: "getProject",
         tab: tab.id
       }, resp => {
-        this.currentGithubRepo = resp.project
+        this.currentGithubRepo = resp.repoFullName
+        window.repoName = this.repoName = resp.repoName
+        window.repoOwner = this.repoOwner = resp.repoOwner
+        window.issueNumber = this.issueNumber = resp.issueNumber
+        window.issueBody = this.issueBody = resp.issueBody
       })
     })
+    // this.currentGithubRepo = 'sykp241095/gantt-viewer-for-github-project'
+    // this.repoName = 'gantt-viewer-for-github-project'
+    // this.repoOwner = 'sykp241095'
+    // this.issueNumber = '12'
+    // this.issueBody = "包含：\n- Guess\n- Set Time\n<!-- GanttStart: 2020-03-30 -->\n<!-- GanttDue: 2020-06-07 -->\n<!-- GanttProgress: 58% -->"
+    // window.issueBody = this.issueBody
+    // window.issueNumber = this.issueNumber
+    // window.repoName = this.repoName
+    // window.repoOwner = this.repoOwner
 
     this.resizeWindow()
   },
@@ -118,7 +142,7 @@ export default {
     ]),
     resizeWindow () {
       document.body.style.height = `${187 + 44 * (
-        this.historyList.length + Boolean(this.currentGithubRepo))}px`;
+        this.historyList.length + Boolean(this.currentGithubRepo) + Boolean(this.issueNumber))}px`;
     },
     async createAndJumpToPanel (repo) {
       this.isLoading = true

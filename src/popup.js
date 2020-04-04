@@ -26,6 +26,11 @@ const router = new VueRouter({
           path: 'start',
           name: 'start',
           component: () => import('@/pages/PopupStartPage.vue')
+        },
+        {
+          path: 'set-time',
+          name: 'set-time',
+          component: () => import('@/pages/PopupSetTimePage.vue')
         }
       ]
     },

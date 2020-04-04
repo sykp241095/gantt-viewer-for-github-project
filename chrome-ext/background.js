@@ -10,7 +10,7 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
         return sendResponse({})
     } else if (request.msg === 'getProject') {
         return sendResponse({
-            'project': tabInfo[request.tab]
+            ...tabInfo[request.tab]
         })
     }
 })
