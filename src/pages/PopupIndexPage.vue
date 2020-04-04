@@ -29,7 +29,7 @@
       <div v-if="!searchKey">
         <ul class="panel-list">
           <li v-for="history in historyList" :key="history.id">
-            <a class="menu-item" :style="{ backgroundImage: 'url(' + require('../assets/recently.png') + ')' }" @click="jump2Panel(history.id)">
+            <a class="menu-item" :style="{ backgroundImage: 'url(' + require('../assets/favorites.png') + ')' }" @click="jump2Panel(history.id)">
               {{ history.name }}
             </a>
             <div class="remove" @click="deletePanel({id: history.id})"></div>
@@ -37,7 +37,7 @@
         </ul>
         <ul>
           <li v-if="currentGithubRepo">
-            <a class="menu-item split-border" :style="{ backgroundImage: 'url(' + require('../assets/favorites.png') + ')' }" @click="createAndJumpToPanel(currentGithubRepo)">
+            <a class="menu-item split-border" :style="{ backgroundImage: 'url(' + require('../assets/dice.svg') + ')' }" @click="createAndJumpToPanel(currentGithubRepo)">
               <strong>Guess:</strong> {{ currentGithubRepo }}
             </a>
           </li>
