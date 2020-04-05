@@ -61,10 +61,10 @@
             </a>
           </li>
           <li v-if="userInfo">
-            <a class="menu-item plain-item split-border" :style="{ backgroundImage: `url(${userInfo.avatarUrl})` }">{{ userInfo.login }}</a>
+            <div class="menu-item plain-item split-border" :style="{ backgroundImage: `url(${userInfo.avatarUrl})` }">{{ userInfo.login }}</div>
           </li>
           <li>
-            <a class="menu-item plain-item split-border" style="text-align:right">
+            <div class="menu-item plain-item split-border" style="text-align:right; padding: 0 22px;">
               <table style="width:100%">
                 <tr>
                   <td>
@@ -97,7 +97,7 @@
                   </td>
                 </tr>
               </table>
-            </a>
+            </div>
           </li>
         </ul>
       </div>
@@ -138,8 +138,7 @@ export default {
       currentGithubRepo: null,
       repoName: null,
       repoOwner: null,
-      issueNumber: null,
-      issueBody: null
+      issueNumber: null
     }
   },
   mounted () {
@@ -159,15 +158,12 @@ export default {
         window.repoName = this.repoName = resp.repoName
         window.repoOwner = this.repoOwner = resp.repoOwner
         window.issueNumber = this.issueNumber = resp.issueNumber
-        window.issueBody = this.issueBody = resp.issueBody
       })
     })
     // this.currentGithubRepo = 'sykp241095/gantt-viewer-for-github-project'
     // this.repoName = 'gantt-viewer-for-github-project'
     // this.repoOwner = 'sykp241095'
     // this.issueNumber = '12'
-    // this.issueBody = "包含：\n- Guess\n- Set Time\n<!-- GanttStart: 2020-03-30 -->\n<!-- GanttDue: 2020-06-07 -->\n<!-- GanttProgress: 58% -->"
-    // window.issueBody = this.issueBody
     // window.issueNumber = this.issueNumber
     // window.repoName = this.repoName
     // window.repoOwner = this.repoOwner
@@ -400,7 +396,8 @@ export default {
           height 22px
 
       .plain-item
-        cursor auto
+        a
+          cursor pointer
 
         &:hover
           background-color #fff

@@ -15,18 +15,15 @@
             githubAnalytic.content.indexOf('issues/show') > -1 &&
             issueBodyHtml.length > 0) {
             issueNumber = window.location.pathname.split('/').slice(-1)[0]
-            issueBody = issueBodyHtml[0].value
         }
     }
-    console.log(repoFullName, repoName, repoOwner, issueNumber, issueBody)
     chrome.extension.sendMessage({
         msg: "githubProject",
         content: {
             repoFullName,
             repoName,
             repoOwner,
-            issueNumber,
-            issueBody
+            issueNumber
         }
     })
 })();

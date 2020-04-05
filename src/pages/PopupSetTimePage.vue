@@ -46,18 +46,23 @@ export default {
   data () {
     return {
       dates: null,
-      isLoading: false
+      isLoading: false,
+      issue: {
+        id: null,
+        body: null
+      }
     }
   },
-  mounted () {
+  async mounted () {
     document.body.style.height = '545px'
-    // window.issueBody = "包含：\n- Guess\n- Set Time\n<!-- GanttStart: 2020-03-30 -->\n<!-- GanttDue: 2020-06-07 -->\n<!-- GanttProgress: 58% -->"
     // window.repoName = 'gantt-viewer-for-github-project'
     // window.repoOwner = 'sykp241095'
     // window.issueNumber = '12'
-    let ganttStart = this.getValueFromBody(window.issueBody, FLAG_REGEX_ITEM_START)
-    let ganttEnd = this.getValueFromBody(window.issueBody, FLAG_REGEX_ITEM_DUE)
-    let ganttDuration = this.getValueFromBody(window.issueBody, FLAG_REGEX_ITEM_DURATION)
+    await this.initIssue()
+
+    let ganttStart = this.getValueFromBody(this.issue.body, FLAG_REGEX_ITEM_START)
+    let ganttEnd = this.getValueFromBody(this.issue.body, FLAG_REGEX_ITEM_DUE)
+    let ganttDuration = this.getValueFromBody(this.issue.body, FLAG_REGEX_ITEM_DURATION)
     if (ganttStart && ganttEnd) {
       ganttStart = moment(ganttStart).toDate()
       ganttEnd = moment(ganttEnd).toDate()
@@ -73,7 +78,7 @@ export default {
   methods: {
     async submit () {
       this.isLoading = true
-      let body = window.issueBody
+      let body = this.issue.body
       body = this.updateIssueBodyForField(
         body,
         FLAG_REGEX_ITEM_START,
@@ -90,7 +95,7 @@ export default {
       if (m) {
         body = body.replace(m[0], '');
       }
-      let issueId = await this.$octoClient.getIssueId(window.repoName, window.repoOwner, window.issueNumber)
+
       await this.$octoClient.request(
         `
         mutation update($id: ID!, $body: String!) {
@@ -103,16 +108,22 @@ export default {
         }
       `,
         {
-          id: issueId,
+          id: this.issue.id,
           body,
         }
       )
       this.isLoading = false
-      window.issueBody = body
+      this.issue.body = body
       this.$buefy.notification.open({
         message: 'Save successfully!',
         type: 'is-success'
       })
+    },
+    async initIssue () {
+        this.isLoading = true
+        this.issue = await this.$octoClient.getIssueDetail(window.repoName, window.repoOwner, window.issueNumber)
+        console.log(this.issue)
+        this.isLoading = false
     },
     getValueFromBody (body, flagMatcher) {
       const m = body.match(flagMatcher)

@@ -201,7 +201,7 @@ class OctoClient {
     return resp.organization.project;
   };
 
-  getIssueId = async (repoName, repoOwner, issueNumber) => {
+  getIssueDetail = async (repoName, repoOwner, issueNumber) => {
     issueNumber = parseInt(issueNumber)
     const resp = await this.request(
       `
@@ -209,6 +209,7 @@ class OctoClient {
         repository(name: $repoName, owner: $repoOwner) {
           issue(number: $issueNumber) {
             id
+            body
           }
         }
         ${this.QUERY_FRAG_RATELIMIT}
@@ -224,7 +225,7 @@ class OctoClient {
       console.log(resp);
       throw new Error('Invalid getIssueId response');
     }
-    return resp.repository.issue.id;
+    return resp.repository.issue;
   }
 
   getGithubUserInfo = async () => {
