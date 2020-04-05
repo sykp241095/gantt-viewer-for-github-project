@@ -4,7 +4,7 @@
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
-            How to get github access token
+            How to get Github access token
           </h1>
         </div>
       </div>
