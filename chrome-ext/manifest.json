@@ -1,12 +1,11 @@
 {
   "name": "Gantt Viewer for Github Project",
   "version": "0.4",
-  "description": "Manage Github project with Gantt chart - powered by PingCAP&TiDB",
+  "description": "Manage Github project with Gantt chart - Powered by PingCAP and TiDB",
   "permissions": [
-    "activeTab",
     "storage",
-    "http://*/*",
-    "https://*/*"
+    "http://github.com/*",
+    "https://github.com/*"
   ],
   "options_page": "dist/index.html",
   "background": {
