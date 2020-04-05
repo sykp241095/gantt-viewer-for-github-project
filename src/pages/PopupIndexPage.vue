@@ -45,7 +45,7 @@
           </li>
           <li v-if="issueNumber">
             <a class="menu-item" @click="$router.push('/set-time')">
-              <strong>Set time</strong>
+              <strong>Set Issue Duration</strong>
             </a>
           </li>
         </ul>
@@ -58,6 +58,11 @@
           <li>
             <a class="menu-item" :style="{ backgroundImage: 'url(' + require('../assets/security.png') + ')' }" @click="resetAccessToken()">
               <strong>Reset Access Token</strong>
+            </a>
+          </li>
+          <li>
+            <a class="menu-item" @click="jump2UserGuide()">
+              <strong>User Guide</strong>
             </a>
           </li>
           <li v-if="userInfo">
@@ -190,7 +195,7 @@ export default {
     ]),
     resizeWindow () {
       let count = Math.min(this.historyList.length, 5) + Boolean(this.currentGithubRepo) + Boolean(this.issueNumber)
-      document.body.style.height = `${232 + 44 * count}px`;
+      document.body.style.height = `${276 + 44 * count}px`;
     },
     async createAndJumpToPanel (repo) {
       this.isLoading = true
@@ -281,6 +286,9 @@ export default {
     },
     jump2ManagePanels () {
       chrome.tabs.create({ url: 'dist/index.html#/local_panel' });
+    },
+    jump2UserGuide() {
+      chrome.tabs.create({ url: 'dist/index.html' });
     },
     resetAccessToken () {
       chrome.storage.sync.set({

@@ -2,7 +2,7 @@
   <b-navbar type="is-light">
     <template slot="brand">
       <b-navbar-item tag="router-link" :to="{ path: '/' }"
-        >GanttViewer</b-navbar-item
+        >Gantt Viewer for Github Project</b-navbar-item
       >
     </template>
     <template slot="start">

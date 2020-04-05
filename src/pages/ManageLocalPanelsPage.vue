@@ -24,7 +24,6 @@
             @click="handleImportPanel"
             >Import Panel JSON</b-button
           >
-          <a href="https://pingcap.com" target="_blank"><img src="../assets/pingcap.png" style="position:fixed;top:3px;right:10px;padding:0;margin:0;height:20px;" /></a>
         </div>
       </div>
     </section>

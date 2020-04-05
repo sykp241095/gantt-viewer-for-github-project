@@ -18,3 +18,7 @@ chrome.extension.onMessage.addListener(function(request, sender, sendResponse) {
 chrome.tabs.onRemoved.addListener(function(tabId) {
     delete tabInfo[tabId];
 })
+
+chrome.runtime.onInstalled.addListener(function (){
+    chrome.tabs.create({url:chrome.extension.getURL("dist/index.html")},function(){})
+})
