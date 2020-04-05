@@ -61,7 +61,7 @@
             </a>
           </li>
           <li>
-            <a class="menu-item" @click="jump2UserGuide()">
+            <a class="menu-item" @click="jump2UserGuide()" :style="{ backgroundImage: 'url(' + require('../assets/signpost.svg') + ')' }">
               <strong>User Guide</strong>
             </a>
           </li>
@@ -194,7 +194,7 @@ export default {
       'deleteProject',
     ]),
     resizeWindow () {
-      let count = Math.min(this.historyList.length, 5) + Boolean(this.currentGithubRepo) + Boolean(this.issueNumber)
+      let count = Math.min(this.historyList.length, 4) + Boolean(this.currentGithubRepo) + Boolean(this.issueNumber)
       document.body.style.height = `${276 + 44 * count}px`;
     },
     async createAndJumpToPanel (repo) {
@@ -360,7 +360,7 @@ export default {
       margin: 0;
 
       &.panel-list
-        max-height 220px
+        max-height 176px
         overflow-y scroll
 
       li

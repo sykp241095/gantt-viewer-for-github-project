@@ -1,16 +1,16 @@
 <template>
   <div class="popup-set-time-wrapper">
-    <b-loading is-full-page="true" :active="isLoading" :can-cancel="true"></b-loading>
+    <b-loading :is-full-page="true" :active="isLoading" :can-cancel="true"></b-loading>
     <div class="header" @click="$router.push('/')">
       <img src="../assets/back.svg" width="20px" height="10px">
       <span>Back</span>
     </div>
     <div class="issue-body-wrapper">
       <div class="form">
+        <div class="form-title">Edit issue's gantt meta</div>
         <div class="form-item">
-          <div class="form-item-title">Set Time</div>
-          <div class="form-item-hint" v-if="dates">
-          {{ ganttDateDisplay }}
+          <div class="form-item-hint">
+          Duration: {{ ganttDateDisplay }}
           </div>
           <b-field>
             <b-datepicker
@@ -19,6 +19,14 @@
                 v-model="dates"
                 range>
             </b-datepicker>
+          </b-field>
+        </div>
+        <div class="form-item" style="display: flex;">
+          <div class="form-item-hint">
+          Progress:
+          </div>
+          <b-field style="width: 60%; margin-left: 20px;">
+            <b-slider v-model="ganttProgress" :custom-formatter="val => val + '%'"></b-slider>
           </b-field>
         </div>
       </div>
@@ -35,6 +43,7 @@ import moment from 'moment'
 const FLAG_REGEX_ITEM_START = /GanttStart:\s*(\d{4}-\d{2}-\d{2})/i
 const FLAG_REGEX_ITEM_DUE = /GanttDue:\s*(\d{4}-\d{2}-\d{2})/i
 const FLAG_REGEX_ITEM_DURATION = /GanttDuration:\s*([\d]+)d/i
+const FLAG_REGEX_ITEM_PROGRESS = /GanttProgress:\s*([\d.]+)%/i;
 const FLAG_DATE_FORMAT = 'YYYY-MM-DD'
 
 const TEMPLATE_ITEM_START = 'GanttStart: {}'
@@ -46,6 +55,7 @@ export default {
   data () {
     return {
       dates: null,
+      ganttProgress: 0,
       isLoading: false,
       issue: {
         id: null,
@@ -54,7 +64,8 @@ export default {
     }
   },
   async mounted () {
-    document.body.style.height = '545px'
+    document.body.style.height = '590px'
+
     // window.repoName = 'gantt-viewer-for-github-project'
     // window.repoOwner = 'sykp241095'
     // window.issueNumber = '12'
@@ -63,6 +74,7 @@ export default {
     let ganttStart = this.getValueFromBody(this.issue.body, FLAG_REGEX_ITEM_START)
     let ganttEnd = this.getValueFromBody(this.issue.body, FLAG_REGEX_ITEM_DUE)
     let ganttDuration = this.getValueFromBody(this.issue.body, FLAG_REGEX_ITEM_DURATION)
+    let ganttProgress = this.getValueFromBody(this.issue.body, FLAG_REGEX_ITEM_PROGRESS)
     if (ganttStart && ganttEnd) {
       ganttStart = moment(ganttStart).toDate()
       ganttEnd = moment(ganttEnd).toDate()
@@ -72,6 +84,9 @@ export default {
     } else {
       ganttStart = moment().toDate()
       ganttEnd = moment().add(1, 'day').toDate()
+    }
+    if (ganttProgress) {
+      this.ganttProgress = parseInt(ganttProgress)
     }
     this.dates = [ganttStart, ganttEnd]
   },
@@ -90,6 +105,12 @@ export default {
         FLAG_REGEX_ITEM_DUE,
         TEMPLATE_ITEM_DUE,
         moment(this.dates[1]).format(FLAG_DATE_FORMAT)
+      )
+      body = this.updateIssueBodyForField(
+        body,
+        FLAG_REGEX_ITEM_PROGRESS,
+        TEMPLATE_ITEM_PROGRESS,
+        this.ganttProgress
       )
       const m = body.match(FLAG_REGEX_ITEM_DURATION);
       if (m) {
@@ -144,7 +165,10 @@ export default {
   },
   computed: {
     ganttDateDisplay: function () {
-      return `${moment(this.dates[0]).format(FLAG_DATE_FORMAT)} ~ ${moment(this.dates[1]).format(FLAG_DATE_FORMAT)}`
+      if (this.dates) {
+        return `${moment(this.dates[0]).format(FLAG_DATE_FORMAT)} ~ ${moment(this.dates[1]).format(FLAG_DATE_FORMAT)}`
+      }
+      return ''
     }
   }
 }
@@ -155,9 +179,9 @@ export default {
   width 100%
 
   .header
-    padding 10px 15px
+    padding 15px
     background-color #F7F9FA
-    height 44px
+    height 50px
     cursor pointer
     border-bottom 1px solid #E7E8EA
 
@@ -174,17 +198,19 @@ export default {
     padding 10px
 
     .form
-      padding 10px 0
       margin auto
 
-      .form-item-title
+      .form-title
         text-align center
         font-size 1.2rem
         font-weight 500
 
-      .form-item-hint
-        text-align center
-        padding 5px 0
+      .form-item
+        margin-bottom 10px
+
+        .form-item-hint
+          text-align left
+          padding 5px 0
 
   .form-footer
     padding 10px 15px
