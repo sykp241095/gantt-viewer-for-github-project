@@ -4,8 +4,9 @@
   "description": "Manage Github project with Gantt chart - Powered by PingCAP and TiDB",
   "permissions": [
     "storage",
-    "http://github.com/*",
-    "https://github.com/*"
+    "activeTab",
+    "http://*/*",
+    "https://*/*"
   ],
   "options_page": "dist/index.html",
   "background": {
