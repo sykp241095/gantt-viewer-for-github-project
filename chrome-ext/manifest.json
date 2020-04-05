@@ -5,8 +5,10 @@
   "permissions": [
     "storage",
     "activeTab",
-    "http://*/*",
-    "https://*/*"
+    "http://github.com/*",
+    "https://github.com/*",
+    "http://api.github.com/*",
+    "https://api.github.com/*"
   ],
   "options_page": "dist/index.html",
   "background": {
