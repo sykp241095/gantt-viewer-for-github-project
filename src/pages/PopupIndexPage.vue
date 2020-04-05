@@ -189,10 +189,7 @@ export default {
       'deleteProject',
     ]),
     resizeWindow () {
-      let count = this.historyList.length + Boolean(this.currentGithubRepo) + Boolean(this.issueNumber)
-      if (count>5) {
-        count = 5
-      }
+      let count = Math.min(this.historyList.length, 5) + Boolean(this.currentGithubRepo) + Boolean(this.issueNumber)
       document.body.style.height = `${232 + 44 * count}px`;
     },
     async createAndJumpToPanel (repo) {
