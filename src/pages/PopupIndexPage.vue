@@ -45,7 +45,7 @@
           </li>
           <li v-if="issueNumber">
             <a class="menu-item" @click="$router.push('/set-time')">
-              <strong>Set Issue Duration</strong>
+              <strong>Set Issue Gantt Meta</strong>
             </a>
           </li>
         </ul>

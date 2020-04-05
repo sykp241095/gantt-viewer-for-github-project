@@ -7,12 +7,8 @@
     </div>
     <div class="issue-body-wrapper">
       <div class="form">
-        <div class="form-title">Edit issue's gantt meta</div>
         <div class="form-item">
-          <div class="form-item-hint">
-          Duration: {{ ganttDateDisplay }}
-          </div>
-          <b-field>
+          <b-field :label="'Date: '+ganttDateDisplay">
             <b-datepicker
                 placeholder="Click to select..."
                 inline
@@ -22,16 +18,13 @@
           </b-field>
         </div>
         <div class="form-item" style="display: flex;">
-          <div class="form-item-hint">
-          Progress:
-          </div>
-          <b-field style="width: 60%; margin-left: 20px;">
+          <b-field style="width:100%" :label="'Progress: '+ganttProgress+'%'">
             <b-slider v-model="ganttProgress" :custom-formatter="val => val + '%'"></b-slider>
           </b-field>
         </div>
       </div>
     </div>
-    <div class="form-footer" @click="submit">Save</div>
+    <div class="form-footer" @click="submit">{{buttonText}}</div>
   </div>
 </template>
 
@@ -60,15 +53,12 @@ export default {
       issue: {
         id: null,
         body: null
-      }
+      },
+      buttonText: "Save"
     }
   },
   async mounted () {
     document.body.style.height = '590px'
-
-    // window.repoName = 'gantt-viewer-for-github-project'
-    // window.repoOwner = 'sykp241095'
-    // window.issueNumber = '12'
     await this.initIssue()
 
     let ganttStart = this.getValueFromBody(this.issue.body, FLAG_REGEX_ITEM_START)
@@ -93,6 +83,7 @@ export default {
   methods: {
     async submit () {
       this.isLoading = true
+      this.buttonText = "Saving..."
       let body = this.issue.body
       body = this.updateIssueBodyForField(
         body,
@@ -135,10 +126,15 @@ export default {
       )
       this.isLoading = false
       this.issue.body = body
-      this.$buefy.notification.open({
-        message: 'Save successfully!',
-        type: 'is-success'
-      })
+      this.buttonText = "Saved successfully!"
+      let $this = this
+      setTimeout(function(){
+        $this.buttonText = 'Save'
+      }, 1000)
+      // this.$buefy.notification.open({
+      //   message: 'Save successfully!',
+      //   type: 'is-success'
+      // })
     },
     async initIssue () {
         this.isLoading = true
@@ -213,6 +209,10 @@ export default {
           padding 5px 0
 
   .form-footer
+    position fixed
+    bottom 0
+    left 0
+    right 0
     padding 10px 15px
     background-color #F7F9FA
     height 44px

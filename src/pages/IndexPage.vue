@@ -49,6 +49,28 @@
 
         <div class="columns">
           <div class="column is-two-fifths">
+            <h2 class="subtitle">Step 3: Search your project or just click "Guess" when you are still in this issue page</h2>
+          </div>
+          <div class="column">
+            <img src="../assets/step3.png" style="width:350px;" />
+          </div>
+        </div>
+        <br />
+        <br />
+
+        <div class="columns">
+          <div class="column is-two-fifths">
+            <h2 class="subtitle">Step 4: Set Issue Gantt Meta: Date and Progress, then click "Save"</h2>
+          </div>
+          <div class="column">
+            <img src="../assets/step4.png" style="width:350px;" />
+          </div>
+        </div>
+        <br />
+        <br />
+
+        <div class="columns">
+          <div class="column is-two-fifths">
             <h2 class="subtitle">Step n: Open your Gantt panel by clicking that panel in extension's popup</h2>
           </div>
           <div class="column">
