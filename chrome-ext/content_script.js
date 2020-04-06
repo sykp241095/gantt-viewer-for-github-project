@@ -5,8 +5,6 @@ function sendGithubMetaToEXT () {
         issueBodyHtml = document.getElementsByName('issue[body]')
     var repoFullName, repoOwner, repoName, issueNumber, issueBody
 
-    console.log(githubShortcut, githuRepoMeta, githubAnalytic, issueBodyHtml)
-
     if (window.location.hostname === 'github.com' && githubShortcut && githuRepoMeta) {
         if (githubShortcut.content.indexOf('repository') > -1) {
             repoFullName = githuRepoMeta.content
@@ -38,15 +36,15 @@ function sendGithubMetaToEXT () {
     document.body.addEventListener('click', ()=>{
         requestAnimationFrame(()=>{
             if (url !== location.href) {
-                setTimeout(sendGithubMetaToEXT, 3000)
+                setTimeout(sendGithubMetaToEXT, 1000)
                 url = location.href
             }
         })
     }, true)
 
-    window.onpopstate = function(event) {
+    window.onpopstate = (event) => {
         if (url !== location.href) {
-            setTimeout(sendGithubMetaToEXT, 3000)
+            setTimeout(sendGithubMetaToEXT, 1000)
             url = location.href
         }
     }
