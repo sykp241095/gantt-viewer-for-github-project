@@ -221,4 +221,14 @@ export default {
 
     &:hover
       background-color #e6e6e6
+
+.datepicker .datepicker-table .datepicker-body .datepicker-cell.is-selected.is-within-selected
+  background-color: rgba(72, 148, 255, 0.7)
+
+.datepicker .datepicker-table .datepicker-body .datepicker-cell.is-selected.is-last-selected
+  background-color: rgba(72, 148, 255, 0.7)
+
+.datepicker .datepicker-table .datepicker-body .datepicker-cell.is-selected.is-first-selected
+  background-color: rgba(72, 148, 255, 0.7)
 </style>
+
