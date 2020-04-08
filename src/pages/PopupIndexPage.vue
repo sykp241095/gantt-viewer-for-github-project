@@ -73,7 +73,7 @@
               <table style="width:100%">
                 <tr>
                   <td>
-                    <social-sharing url="https://wwww.pingcap.com"
+                    <social-sharing url="https://chrome.google.com/webstore/detail/epmlnpbkbohmcdncnblilnafjcmgdlmi"
                                     title="Gantt Viewer for Github Project"
                                     description="Gantt Viewer for Github Project, Powered by PingCAP/TiDB, MySQL at Scale"
                                     quote="Gantt Viewer for Github Project"
